@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SyncGrow | Consultoria IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: radial-gradient(circle at top, #1e293b, #0f172a); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .chat-container { height: calc(100vh - 350px); overflow-y: auto; scroll-behavior: smooth; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-4">
+    <header class="flex justify-between items-center mb-6 pt-2">
+        <div>
+            <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent italic">SYNCGROW</h1>
+            <p class="text-[10px] text-blue-400 tracking-widest font-bold uppercase">AI Social Intelligence</p>
+        </div>
+        <div class="w-10 h-10 rounded-full border-2 border-blue-500 flex items-center justify-center font-bold text-blue-400 bg-blue-500/10">S</div>
+    </header>
+
+    <main class="max-w-md mx-auto relative">
+        <div id="home" class="tab-content active space-y-4">
+            <div class="bg-slate-800/50 border border-slate-700 p-5 rounded-[2rem] backdrop-blur-md">
+                <h2 class="text-sm font-semibold text-slate-400 mb-4 flex items-center">📈 Desempenho Geral</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700/50">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase block mb-1">Crescimento</span>
+                        <span class="text-2xl font-bold text-green-400">+12%</span>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700/50">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase block mb-1">Alcance</span>
+                        <span class="text-2xl font-bold text-blue-400">14.8k</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-600 to-cyan-500 p-5 rounded-[2rem] shadow-lg shadow-blue-500/20">
+                <h3 class="font-bold text-lg mb-1 italic">Dica da IA 🤖</h3>
+                <p class="text-sm text-blue-50 text-pretty">Seus Reels de "Como Fazer" estão com 40% mais retenção. Priorize esse formato nas próximas 48h.</p>
+            </div>
+        </div>
+
+        <div id="chat" class="tab-content bg-slate-800/40 border border-slate-700/50 rounded-[2.5rem] p-4 backdrop-blur-sm">
+            <div id="chatBox" class="chat-container space-y-4 pr-2">
+                <div class="flex items-start gap-2">
+                    <div class="bg-blue-600 p-3 rounded-2xl rounded-tl-none text-xs font-medium max-w-[85%] shadow-lg">
+                        Olá! Analisei seu último post. Quer que eu escreva um roteiro de Reels para aumentar seu engajamento?
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-2 items-center bg-slate-900/80 p-2 rounded-full border border-slate-700">
+                <input id="userInput" type="text" placeholder="Pergunte algo..." class="flex-1 bg-transparent border-none px-4 text-sm focus:outline-none placeholder:text-slate-600">
+                <button onclick="sendMessage()" class="bg-blue-500 hover:bg-blue-400 w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-blue-500/40">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="sync" class="tab-content space-y-4">
+            <h2 class="text-center text-slate-400 font-bold text-sm tracking-widest uppercase mb-6">Sincronizar APIs</h2>
+            <button class="w-full bg-gradient-to-r from-pink-600 to-purple-600 p-4 rounded-2xl flex items-center justify-center gap-3 font-bold shadow-lg shadow-pink-600/20 active:scale-[0.98] transition">Instagram Insights</button>
+            <button class="w-full bg-black border border-slate-700 p-4 rounded-2xl flex items-center justify-center gap-3 font-bold active:scale-[0.98] transition">TikTok Creators</button>
+            <p class="text-[10px] text-center text-slate-500 pt-4 px-8 leading-relaxed">A conexão é feita através de tokens criptografados para garantir a segurança dos seus dados sociais.</p>
+        </div>
+    </main>
+
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[280px] bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-2 rounded-full flex justify-around shadow-2xl z-50">
+        <button onclick="showTab('home')" class="p-3 text-slate-400 hover:text-blue-400 transition" title="Início">🏠</button>
+        <button onclick="showTab('chat')" class="p-3 text-slate-400 hover:text-blue-400 transition" title="Consultoria">💬</button>
+        <button onclick="showTab('sync')" class="p-3 text-slate-400 hover:text-blue-400 transition" title="Contas">⚙️</button>
+    </nav>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const box = document.getElementById('chatBox');
+            if(input.value.trim() !== "") {
+                box.innerHTML += `<div class="flex justify-end"><div class="bg-slate-700 p-3 rounded-2xl rounded-tr-none text-xs max-w-[85%]">${input.value}</div></div>`;
+                const userText = input.value.toLowerCase();
+                input.value = "";
+                box.scrollTop = box.scrollHeight;
+
+                setTimeout(() => {
+                    let reply = "Interessante! Para esse nicho, recomendo usar a técnica do 'Gancho nos 3 segundos'. Quer um exemplo de frase?";
+                    if(userText.includes("reels")) reply = "Roteiro sugerido: 0s-3s (Problema comum), 3s-10s (Sua solução), 10s-15s (Chamada para seguir).";
+                    if(userText.includes("roteiro")) reply = "Claro! Vamos lá: comece com uma pergunta impactante sobre sua área. Depois mostre 3 passos rápidos e termine pedindo para compartilharem.";
+                    
+                    box.innerHTML += `<div class="flex items-start gap-2"><div class="bg-blue-600 p-3 rounded-2xl rounded-tl-none text-xs font-medium max-w-[85%] shadow-lg">${reply}</div></div>`;
+                    box.scrollTop = box.scrollHeight;
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

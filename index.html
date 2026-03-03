@@ -3,79 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minha Rede Social</title>
+<title>Global Social</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-900 text-white min-h-screen p-4">
 
-<header class="text-center mb-6">
-  <h1 class="text-2xl font-bold">🔥 Minha Rede Social</h1>
-  <p class="text-xs text-gray-400">Crie, curta e apague posts</p>
-</header>
-
 <div class="max-w-md mx-auto">
 
+<!-- Language Selector -->
+<div class="flex justify-end mb-4">
+<select onchange="mudarIdioma(this.value)" class="text-black text-xs rounded px-2 py-1">
+<option value="pt">Português</option>
+<option value="es">Español</option>
+<option value="en">English</option>
+</select>
+</div>
+
+<!-- Login -->
+<div id="loginBox" class="text-center">
+<h1 class="text-2xl font-bold mb-4">Global Social 🌍</h1>
+<input id="username" placeholder="Seu nome"
+class="w-full mb-3 p-2 rounded text-black text-sm">
+<button onclick="login()" 
+class="w-full bg-blue-500 py-2 rounded-xl text-sm font-bold">
+Entrar
+</button>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+
+<header class="mb-6 text-center">
+<h2 id="welcomeText" class="font-bold"></h2>
+<button onclick="logout()" class="text-xs text-red-400 mt-1">Sair</button>
+</header>
+
 <button onclick="criarPost()" 
-class="mb-6 w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-sm font-bold shadow-lg">
-+ Criar Post
+class="mb-6 w-full bg-green-500 px-4 py-2 rounded-xl text-sm font-bold">
++ Novo Post
 </button>
 
-<div class="space-y-4"></div>
+<div id="posts" class="space-y-4"></div>
+
+</div>
 
 </div>
 
 <script>
 
+let idioma = "pt";
+let usuario = localStorage.getItem("usuario");
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
-function salvarPosts() {
-  localStorage.setItem("posts", JSON.stringify(posts));
+const textos = {
+pt: { entrar:"Entrar", sair:"Sair", novo:"+ Novo Post", comentar:"Comentar" },
+es: { entrar:"Entrar", sair:"Salir", novo:"+ Nuevo Post", comentar:"Comentar" },
+en: { entrar:"Login", sair:"Logout", novo:"+ New Post", comentar:"Comment" }
+};
+
+function mudarIdioma(lang){
+idioma = lang;
 }
 
-function renderPosts() {
-  const box = document.querySelector(".space-y-4");
-  box.innerHTML = "";
-
-  posts.forEach((post, index) => {
-    box.innerHTML += `
-      <div class="bg-slate-800 p-4 rounded-2xl shadow-lg">
-        <p class="text-sm mb-3">${post.texto}</p>
-        <div class="flex justify-between text-xs">
-          <button onclick="curtirPost(${index})">❤️ ${post.likes}</button>
-          <button onclick="apagarPost(${index})" class="text-red-400">🗑 Apagar</button>
-        </div>
-      </div>
-    `;
-  });
+function login(){
+const nome = document.getElementById("username").value;
+if(!nome) return alert("Digite seu nome");
+usuario = nome;
+localStorage.setItem("usuario", nome);
+iniciarApp();
 }
 
-function criarPost() {
-  const texto = prompt("Escreva seu post:");
-
-  if (!texto || texto.trim() === "") {
-    alert("Escreva algo primeiro!");
-    return;
-  }
-
-  posts.unshift({ texto: texto, likes: 0 });
-  salvarPosts();
-  renderPosts();
+function logout(){
+localStorage.removeItem("usuario");
+location.reload();
 }
 
-function curtirPost(index) {
-  posts[index].likes++;
-  salvarPosts();
-  renderPosts();
-}
-
-function apagarPost(index) {
-  posts.splice(index, 1);
-  salvarPosts();
-  renderPosts();
-}
-
+function iniciarApp(){
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("app").classList.remove("hidden");
+document.getElementById("welcomeText").innerText = "Olá, " + usuario;
 renderPosts();
+}
+
+function salvar(){
+localStorage.setItem("posts", JSON.stringify(posts));
+}
+
+function criarPost(){
+const texto = prompt("Escreva algo:");
+const imagem = prompt("Cole link de imagem (opcional):");
+
+if(!texto) return;
+
+posts.unshift({
+usuario,
+texto,
+imagem,
+likes:0,
+comentarios:[]
+});
+
+salvar();
+renderPosts();
+}
+
+function curtir(index){
+posts[index].likes++;
+salvar();
+renderPosts();
+}
+
+function comentar(index){
+const c = prompt("Comentário:");
+if(!c) return;
+posts[index].comentarios.push(c);
+salvar();
+renderPosts();
+}
+
+function renderPosts(){
+const box = document.getElementById("posts");
+box.innerHTML = "";
+
+posts.forEach((post,i)=>{
+box.innerHTML += `
+<div class="bg-slate-800 p-4 rounded-2xl shadow-lg">
+<p class="text-xs text-gray-400 mb-1">@${post.usuario}</p>
+<p class="text-sm mb-2">${post.texto}</p>
+${post.imagem ? `<img src="${post.imagem}" class="rounded-xl mb-2">` : ""}
+<div class="flex justify-between text-xs mb-2">
+<button onclick="curtir(${i})">❤️ ${post.likes}</button>
+<button onclick="comentar(${i})">${textos[idioma].comentar}</button>
+</div>
+<div class="text-xs text-gray-400">
+${post.comentarios.map(c=>`<p>• ${c}</p>`).join("")}
+</div>
+</div>
+`;
+});
+}
+
+if(usuario) iniciarApp();
 
 </script>
 
